@@ -1,6 +1,8 @@
 import argparse
 import os
+
 import rsa
+
 
 def generate(keypair):
 
@@ -24,8 +26,8 @@ def sign(file, keypair):
         private_key = rsa.PrivateKey.load_pkcs1(f.read())
 
     # Read the contents of the file to sign
-    with open(file, 'rb') as f:
-        file_contents = file.read()
+    with open(file, 'rb') as content_file:
+        file_contents = content_file.read()
 
     # Sign the file contents using the private key
     signature = rsa.sign(file_contents, private_key, 'SHA-256')
@@ -37,11 +39,11 @@ def sign(file, keypair):
 
 
 def verify(file, keypair, signature):
-    with open(keypair, 'rb') as key_file:
-        public_key = rsa.PublicKey.load_pkcs1(key_file.read())
-
     with open(file, 'rb') as file:
         file_contents = file.read()
+
+    with open(keypair, 'rb') as key_file:
+        public_key = rsa.PublicKey.load_pkcs1(key_file.read())
 
     with open(signature, 'rb') as signature_file:
         signature = signature_file.read()
